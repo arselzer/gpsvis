@@ -1,16 +1,8 @@
 var map = L.map("map").setView([48.3257, 16.2143], 13);
 
 L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
+	attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
 }).addTo(map)
-
-/*
-L.circle([48.3281, 16.2143], 500, {
-  color: "rgb(56, 89, 45)",
-  fillColor: "rgb(45, 92, 47)",
-  fillOpacity: 0.6
-}).addTo(map);
-*/
 
 var xhr = new XMLHttpRequest()
 
@@ -62,5 +54,5 @@ function display(data) {
   })
   console.dir(points)
 
-  L.polygon(points).addTo(map)
+  L.polyline(points).setStyle({color: "rgb(23, 89, 232)"}).addTo(map)
 }
