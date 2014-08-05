@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+}
+
+#map {
+  height: 640px;
+}
+
+.header {
+  min-height: 42px;
+  margin: 10px;
+
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 36px;
+  color: rgb(45, 67, 88);
+  text-align: center;
+}
