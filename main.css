@@ -3,10 +3,15 @@ body {
 }
 
 #map {
-  height: 640px;
+  height: 660px;
+  height: 100vh;
 }
 
 .header {
+  top: 0;
+  right: 0;
+  z-index: 100;
+  position: fixed;
   min-height: 42px;
   margin: 10px;
 

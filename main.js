@@ -4,15 +4,26 @@ L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
 }).addTo(map)
 
-var tracks = [
-  "logs/log-1.gpsd",
-  "logs/log-2.gpsd"
-]
+var tracks = {
+  raw: [
+  // logs/log-1.gpsd
+  ],
+  simple: [
+    "logs/log-1.json",
+    "logs/log-2.json"
+  ]
+}
 
-tracks.forEach(function(path) {
+tracks.raw.forEach(function(path) {
   get(path, function(res) {
     var data = simplify(convert(res));
     display(data)
+  })
+})
+
+tracks.simple.forEach(function(path) {
+  get(path, function(res) {
+    display(JSON.parse(res))
   })
 })
 
@@ -54,38 +65,47 @@ function simplify(input) {
       lat: point.lat,
       long: point.lon,
       speed: point.speed,
-      time: new Date(point.time)
+      time: point.time
     }
   })
 }
 
 // display one line
 function display(data) {
-  var meta = {
-    start: data[0].time,
-    end: data[data.length-1].time,
-    avgSpeed: data
-      .map(function(point) { return point.speed; })
-      .reduce(function(l, r) {return l + r; }) / data.length
-  }
-  var points = data.map(function(point) {
+  var path = L.polyline(data.map(function(point) {
     return [point.lat, point.long]
-  })
+  }))
 
-  var path = L.polyline(points)
+  var meta = {
+    start: new Date(data[0].time),
+    end: new Date(data[data.length-1].time),
+    avgSpeed: data // assuming the position is captured every second, for now...
+      .map(function(point) { return point.speed; })
+      .reduce(function(l, r) {return l + r; }) / data.length,
+  }
+
+  var points = path.getLatLngs();
+  meta.distance = 0;
+
+  for (var i = 0; i < points.length-1; i++) {
+      meta.distance +=  points[i].distanceTo(points[i+1])
+  }
 
   path.setStyle({color: "rgb(23, 89, 232)"})
 
-  var bounds = path.getBounds()
-  var center = bounds.getCenter()
+  var middle = points[Math.round(points.length / 2)]
 
-  var marker = L.marker(center)
+  var marker = L.marker(middle)
   marker.addTo(map)
+
+  var dateDiff = new Date(meta.end - meta.start)
 
   var popup = [
     "start: " + meta.start.toLocaleTimeString(),
     "end: " + meta.end.toLocaleTimeString(),
-    "average speed: " + meta.avgSpeed + " m/s"
+    "time: " + dateDiff.getHours() + ":" + dateDiff.getMinutes(),
+    "distance: " + (meta.distance / 1000).toFixed(2) + " km",
+    "average speed: " + (meta.avgSpeed * 3.6).toFixed(2) + " km/h"
   ]
   marker.bindPopup(popup.join("<br />")).openPopup()
 
