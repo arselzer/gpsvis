@@ -21,30 +21,26 @@ function convert(input) {
   try {
     return JSON.parse(line)
   } catch (e) {
-    // works for now. browser errors are too unclear to fix this...
     console.log(line)
   }
-  });
+  return null; // there could be JSON syntax errors, but it is quite safe to ignore them
+})
 }
 
 function simplify(input) {
-  return input.slice(2).filter(function(obj) {
-    if (obj !== undefined && obj.class === "TPV") {
-      return true
-    }
-    else {
-      return false
-    }
+  return input.filter(function(point) {
+    return (point !== null
+    && point.lat !== undefined
+    && point.lon !== undefined
+    && point.mode !== 0 // this (probably) means no GPS signal. causes lat, long, etc to be undef
+    && point.class === "TPV")
   }).map(function(point) {
     return {
-      lat: parseFloat(point.lat),
-      long: parseFloat(point.lon),
+      lat: point.lat,
+      long: point.lon,
       speed: point.speed,
-      time: new Date(point.time)
+      time: new Date(point.time),
     }
-  })
-  .filter(function(point) {
-    return point !== undefined && !isNaN(point.lat) && !isNaN(point.long)
   })
 }
 
@@ -52,7 +48,10 @@ function display(data) {
   var points = data.map(function(point) {
     return [point.lat, point.long]
   })
-  console.dir(points)
 
-  L.polyline(points).setStyle({color: "rgb(23, 89, 232)"}).addTo(map)
+  var path = L.polyline(points)
+
+  path.setStyle({color: "rgb(23, 89, 232)"})
+
+  path.addTo(map)
 }
