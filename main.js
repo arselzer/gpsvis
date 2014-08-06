@@ -5,7 +5,8 @@ L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
 }).addTo(map)
 
 var tracks = [
-  "logs/log-1.gpsd"
+  "logs/log-1.gpsd",
+  "logs/log-2.gpsd"
 ]
 
 tracks.forEach(function(path) {
