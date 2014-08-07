@@ -72,9 +72,19 @@ function simplify(input) {
 
 // display one line
 function display(data) {
+
+  /* Colours */
+
+  var DEFAULT_COLOR = "rgb(23, 89, 232)"
+  var FOCUS_COLOR = "rgb(23, 76, 244)"
+
+  /* Coordinates */
+
   var path = L.polyline(data.map(function(point) {
     return [point.lat, point.long]
   }))
+
+  /* Meta */
 
   var meta = {
     start: new Date(data[0].time),
@@ -91,23 +101,38 @@ function display(data) {
       meta.distance +=  points[i].distanceTo(points[i+1])
   }
 
-  path.setStyle({color: "rgb(23, 89, 232)"})
+  /* Path */
+
+  path.setStyle({color: DEFAULT_COLOR})
 
   var middle = points[Math.round(points.length / 2)]
-
   var marker = L.marker(middle)
   marker.addTo(map)
 
   var dateDiff = new Date(meta.end - meta.start)
 
   var popup = [
-    "start: " + meta.start.toLocaleTimeString(),
-    "end: " + meta.end.toLocaleTimeString(),
+    "start: " + (meta.start.getHours()-1) + ":" + (meta.start.getMinutes() < 10 ? 0 : "") + meta.start.getMinutes() + ", " + meta.start.toLocaleDateString(),
+    "end: " + (meta.end.getHours()-1) + ":" + (meta.end.getMinutes() < 10 ? 0 : "") + meta.end.getMinutes() + ", " + meta.end.toLocaleDateString(),
     "time: " + (dateDiff.getHours()-1) + ":" + dateDiff.getMinutes(),
     "distance: " + (meta.distance / 1000).toFixed(2) + " km",
     "average speed: " + (meta.avgSpeed * 3.6).toFixed(2) + " km/h"
   ]
+
   marker.bindPopup(popup.join("<br />")).openPopup()
+
+  path.addEventListener("click", function() {
+    marker.openPopup()
+  })
+
+  marker.addEventListener("popupopen", function() {
+    path.setStyle({color: FOCUS_COLOR, opacity: 0.64})
+  })
+
+  marker.addEventListener("popupclose", function() {
+    path.setStyle({color: DEFAULT_COLOR, opacity: 0.5})
+  })
+
 
   path.addTo(map)
 }
