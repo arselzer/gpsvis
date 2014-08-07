@@ -113,8 +113,8 @@ function display(data) {
   var dateDiff = new Date(meta.end - meta.start)
 
   var popup = [
-    "start: " + (meta.start.getHours()-1) + ":" + (meta.start.getMinutes() < 10 ? 0 : "") + meta.start.getMinutes() + ", " + meta.start.toLocaleDateString(),
-    "end: " + (meta.end.getHours()-1) + ":" + (meta.end.getMinutes() < 10 ? 0 : "") + meta.end.getMinutes() + ", " + meta.end.toLocaleDateString(),
+    "start: " + (meta.start.getHours()) + ":" + (meta.start.getMinutes() < 10 ? 0 : "") + meta.start.getMinutes() + ", " + meta.start.toLocaleDateString(),
+    "end: " + (meta.end.getHours()) + ":" + (meta.end.getMinutes() < 10 ? 0 : "") + meta.end.getMinutes() + ", " + meta.end.toLocaleDateString(),
     "time: " + (dateDiff.getHours()-1) + ":" + dateDiff.getMinutes(),
     "distance: " + (meta.distance / 1000).toFixed(2) + " km",
     "average speed: " + (meta.avgSpeed * 3.6).toFixed(2) + " km/h"
