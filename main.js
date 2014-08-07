@@ -103,7 +103,7 @@ function display(data) {
   var popup = [
     "start: " + meta.start.toLocaleTimeString(),
     "end: " + meta.end.toLocaleTimeString(),
-    "time: " + dateDiff.getHours() + ":" + dateDiff.getMinutes(),
+    "time: " + (dateDiff.getHours()-1) + ":" + dateDiff.getMinutes(),
     "distance: " + (meta.distance / 1000).toFixed(2) + " km",
     "average speed: " + (meta.avgSpeed * 3.6).toFixed(2) + " km/h"
   ]
