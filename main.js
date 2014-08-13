@@ -11,7 +11,8 @@ var tracks = {
   simple: [
     "logs/log-1.json",
     "logs/log-2.json",
-    "logs/log-3.json"
+    "logs/log-3.json",
+    "logs/log-4.json"
   ]
 }
 
